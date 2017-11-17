@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+<!-- Header -->
+{% block content %}
+<section class="content-section-a">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-5 ml-auto">
+
+        <div class="clearfix"></div>
+        <h2 class="section-heading">Teachers:</h2>
+
+
+
+        <p class="lead">The users who receive notification by system that he/she get a students submitted project. They are able to access
+          their account and see their tasks. They are able to see the written code and run the code without any hassle. The
+          user get the following advantages:<br> • Higher visibility of project progress for students’ supervisors and easier
+          management of projects. <br> • Convenient for supervisors, using online student project management system supervisors
+          can simply monitor the progress of students. Students and supervisors can communicate in an effective and efficient
+          way using online web communication features.
+
+        </p>
+      </div>
+      <div class="col-lg-5 mr-auto">
+        <div class="container-form">
+          <div class="info">
+            <h1 align="center">Sign Up Form</h1>
+          </div>
+        </div>
+        <div class="form">
+          <form action="{% url 'teacher_signup' %}" method="post" role="form" class="login-form">
+            {% csrf_token %}
+            {% for field in form.visible_fields %}
+              <div class="form-group{% if field.errors %} has-error{% endif %}">
+                <label for="{{ field.label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                  <span class="help-block">{{ field.help_text|safe }}</span>
+                {% endif %}
+                {% for error in field.errors %}
+                  <label class="control-label">{{ error }}</label>
+                {% endfor %}
+              </div>
+            {% endfor %}
+            <button type="submit" style="color:rgb(255, 245, 220);">Sign Up</button>
+            <p class="message">Already have any account?<a href="{% url 'teacher_login' %}">Log In</a></p>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- /.container -->
+  <!-- Return to Top -->
+  <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
+</section>
+{% endblock %}

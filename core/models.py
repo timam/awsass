@@ -51,7 +51,7 @@ class Person(AbstractBaseUser, PermissionsMixin):
     person_group = models.IntegerField(
         choices=[(choice.value, choice.name.replace("_", " ")) for choice in PersonGroupType], default=PersonGroupType.DEFAULT.value)
     department = models.ForeignKey(
-        Department, models.DO_NOTHING, unique=True, blank=True, null=True)
+        Department, models.DO_NOTHING, default=None, blank=True, null=True)
     session = models.ForeignKey(
         Session, models.DO_NOTHING, unique=True, blank=True, null=True)
     profile_image = TimestampImageField(
