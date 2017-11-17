@@ -18,6 +18,20 @@ def index(request):
 #Student Section
 @csrf_exempt
 def student_login(request):
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id', None)
+        password = request.POST.get('password', None)
+        if not user_id or not password:
+            return render(request, 'core/s-log-in.html',
+                          {'form': {'non_field_errors': "student id and password must be filled up"}})
+        else:
+            user = auth.authenticate(user_id=user_id, password=password)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return redirect('dashboard')
+            return render(request, 'core/s-log-in.html',
+                          {'form': {'non_field_errors': "invalid credential"}})
     return render(request, 'core/s-log-in.html',)
 
 @csrf_exempt
@@ -36,8 +50,7 @@ def student_signup(request):
             department = form.cleaned_data.get('department')
             password = form.cleaned_data.get('password')
             person = Person.objects.create_user(user_id=user_id, first_name=first_name, last_name=last_name,
-                                       password=password, email=email, department=department,
-                                       person_group=PersonGroupType.STUDENT.value)
+                                       password=password, email=email, department=department,)
             
             person.person_group = PersonGroupType.STUDENT.value
             person.save()

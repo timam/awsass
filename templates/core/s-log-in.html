@@ -32,14 +32,25 @@
         <div class="form">
           <div class="thumbnail">
             <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/169963/hat.svg" />
+            {% if form.non_field_errors %}
+            <span class="alert alert-danger alert-dismissable">
+            {{ form.non_field_errors }}
+            </span>
+            {% endif %}
           </div>
-          <form class="login-form">
-            <input type="text" placeholder="student-id" />
-            <input type="password" placeholder="password" />
-            <button><a href="log-in.html"style="color:rgb(255, 245, 220);">login</a></button>
-            <!--	<p class="margin right-align medium-small" ><a href="forgot-password.html"style="color:rgb(255, 245, 220);">Forgot password?</a></p>-->
-            <p class="message">Haven't any account ? <a href="{% url 'student_signup' %}">Sign up</a></p>
-          </form>
+          <form method="post" action="{% url 'student_login' %}" class="login-form" role="form">
+            {% csrf_token %}
+             <input type="text" id="user_id" name="user_id" placeholder="student-id">
+               {% for error in form.user_id.errors %}
+                 <label class="control-label danger">{{ error }}</label>
+               {% endfor %}
+             <input type="password" class="form-control" id="password" name="password" placeholder="password">
+               {% for error in form.password.errors %}
+                 <label class="control-label danger">{{ error }}</label>
+               {% endfor %}
+             <button type="submit" style="color:rgb(255, 245, 220);">Log in</button>
+             <p class="message">Haven't any account?<a href="{% url 'student_signup' %}">Sign up</a></p>
+           </form>
         </div>
       </div>
     </div>
