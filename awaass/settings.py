@@ -11,10 +11,19 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_DIR = os.path.dirname(__file__)
+BASE_DIR = os.path.dirname(PROJECT_DIR)
+REPO_DIR = os.path.dirname(BASE_DIR)
 
+APPS_DIR = os.path.join(BASE_DIR, 'apps')
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+MEDIA_DIR = os.path.join(BASE_DIR, 'media')
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
+
+sys.path.insert(0, APPS_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -24,8 +33,15 @@ SECRET_KEY = '_20gcnya$25&-2)z$z8oba$d))0%kml%q%h+ir1))9tdqx&$**'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
+
+# USER MODEL SETTINGS
+AUTH_USER_MODEL = 'core.Person'
+
+LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'
 
 
 # Application definition
@@ -37,6 +53,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'core',
+
+    'sorl.thumbnail',
+    'compressor',
 ]
 
 MIDDLEWARE = [
@@ -51,10 +72,26 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'awaass.urls'
 
+STATIC_URL = '/static/'
+STATIC_ROOT = STATIC_DIR
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
+
+COMPRESS_ENABLED = True
+COMPRESS_ROOT = STATIC_ROOT
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = MEDIA_DIR
+
+# TEMPLATES
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -99,6 +136,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
