@@ -40,8 +40,8 @@ ALLOWED_HOSTS = []
 # USER MODEL SETTINGS
 AUTH_USER_MODEL = 'core.Person'
 
-LOGIN_URL = '/login/'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/'
+# LOGIN_REDIRECT_URL = '/dashboard/'
 
 
 # Application definition
