@@ -123,10 +123,87 @@ def teacher_signup(request):
 
 @login_required
 def dashboard(request):
-    teacher_name=request.user.user_id
-    #print(u)
+    user_name=request.user.user_id
+    person= Person.objects.get(user_id=user_name)
+    persons=person.person_group
+    print(persons)
+    if (persons==1):
+        person_groups= Person.objects.filter(person_group="1")
+        return render(request, 'teacher-welcome.html',{'teacher_name':user_name })
+
+
+
+    elif(persons==2):
+        person_groups= Person.objects.filter(person_group="1")
+        assignment_name= Assignment.objects.all()
+        if not assignment_name:
+            notice="You Have No Assignment"
+            return render(request, 'student-welcome.html',{'teacher_name':person_groups,'assignment_name':assignment_name,'notice':notice })
+
+        return render(request, 'student-welcome.html',{'teacher_name':person_groups,'assignment_name':assignment_name})
+
    # t = customer.objects.get(user=u)
    # teacher= Assignment.objects.all()
    # teacher_name=teacher[0]
 
-    return render(request, 'teacher-welcome.html',{'teacher_name':teacher_name })
+    
+
+
+@login_required
+def create_asignment(request):
+    #teacher_name=request.user.user_id
+   # user_name=request.user.user_id
+   
+
+   return render(request, 'create-asignment.html')   
+
+
+
+
+@login_required
+def review_assignemt(request):
+    teacher_name=request.user.user_id
+
+    return render(request, 'review-assignemt.html')   
+
+
+@login_required
+def assignment(request):
+    user_name=request.user.user_id
+    print(user_name)
+    data = {}
+    if request.method == 'POST':	
+        data['name_as'] = request.POST.get('name_as')
+        data['description_as'] = request.POST.get('description_as')
+        names= Assignment.objects.update(name=data['name_as'] )
+        assignments=Assignment.objects.update(description=data['description_as'])
+        print(assignments)
+        
+        done="submit"
+        return render(request, 'create-asignment.html',{'done':done})  
+
+    else:
+
+        return render(request, 'create-asignment.html')
+    
+
+
+def assign_assignment(request):
+    
+    assignment_name= Assignment.objects.all()
+    
+    person_groups= Person.objects.filter(person_group="2")
+    #o=person_groups[0].Person
+
+
+    print(assignment_name)
+    return render(request, 'assign-assignment.html',{'person_groups':person_groups,'assignment_name':assignment_name})
+
+
+
+
+@login_required
+def submit_addignment(request):
+    teacher_name=request.user.user_id
+
+    return render(request, 'submit-addignment.html')   

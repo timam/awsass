@@ -1,10 +1,14 @@
 
 
-<form>
+<form method="post"  action="/assignment/" class="post-form">
+      {% csrf_token %}  
     Assignment Name<br>
-    <input type="text" name="Enter Assignment Name"><br>
+    <input type="text" name="name_as"><br>
     Description :<br>
-    <input type="text" name="Description">
+    <input type="text" name="description_as"><br>
+<h2>{{ done }}</h2>
+<button  type="submit">Create Now</button>
 
 </form>
-<button type="button">Create Now</button>
+<p><a href="/assign_assignment">Assign-Assignment</a></p>
+
