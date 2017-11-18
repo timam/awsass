@@ -88,6 +88,10 @@ class Assignment(models.Model):
     teacher = models.ForeignKey(
         Person, models.DO_NOTHING, blank=False, null=False)
     name = models.CharField(max_length=256, blank=False, null=False)
+    department = models.ForeignKey(
+        Department, models.DO_NOTHING, default=None, blank=True, null=True, related_name="assignment_department")
+    session = models.ForeignKey(
+        Session, models.DO_NOTHING, unique=True, blank=True, null=True, related_name="assignment_session")
     description = models.TextField(blank=True, null=True)
     slug = AutoSlugField(populate_from='name', always_update=True, unique=True)
     clone = models.ForeignKey('self', models.DO_NOTHING, blank=True, null=True)
