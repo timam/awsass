@@ -110,4 +110,10 @@ def teacher_signup(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'core/index.html',)
+    teacher_name=request.user.user_id
+    #print(u)
+   # t = customer.objects.get(user=u)
+   # teacher= Assignment.objects.all()
+   # teacher_name=teacher[0]
+
+    return render(request, 'teacher-welcome.html',{'teacher_name':teacher_name })
