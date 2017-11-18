@@ -32,6 +32,14 @@
 </head>
 
 <body>
+    <div class='head' style="margin: 0 auto;width:96%;">
+	{% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.extra_tags }} text-center" role="alert" data-dssmiss="true">
+          	{{ message }}
+          </div>
+        {% endfor %}
+    {% endif %}
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
@@ -43,6 +51,17 @@
         </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <strong class="nav-link disabled">Wellcome {{user.user_id}}</strong>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'user_logout' %}">Logout</a>
+                    </li>
+                    {% else %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'index' %}">About</a>
                     </li>
@@ -52,6 +71,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'student_login' %}">I'm a Student</a>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

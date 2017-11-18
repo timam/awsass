@@ -1,4 +1,5 @@
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -14,6 +15,12 @@ from .enums import PersonGroupType
 def index(request):
     return render(request, 'core/index.html',)
 
+@login_required
+def user_logout(request):
+    logout(request)
+    messages.success(request, 'You have been successfully logged out.', extra_tags='success')	
+    return redirect('/')
+
 
 #Student Section
 @csrf_exempt
@@ -22,6 +29,7 @@ def student_login(request):
         user_id = request.POST.get('user_id', None)
         password = request.POST.get('password', None)
         if not user_id or not password:
+            messages.error(request, 'Login failed. please try agin', extra_tags='warning')
             return render(request, 'core/s-log-in.html',
                           {'form': {'non_field_errors': "student id and password must be filled up"}})
         else:
@@ -29,7 +37,9 @@ def student_login(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
+                    messages.success(request, 'You have successfully logged in.', extra_tags='success')
                     return redirect('dashboard')
+            messages.error(request, 'Login failed. please try agin', extra_tags='warning')
             return render(request, 'core/s-log-in.html',
                           {'form': {'non_field_errors': "invalid credential"}})
     return render(request, 'core/s-log-in.html',)
@@ -69,6 +79,7 @@ def teacher_login(request):
         user_id = request.POST.get('user_id', None)
         password = request.POST.get('password', None)
         if not user_id or not password:
+            messages.error(request, 'Login failed. please try agin', extra_tags='warning')
             return render(request, 'core/t-log-in.html',
                           {'form': {'non_field_errors': "user_id and password must be filled up"}})
         else:
@@ -76,7 +87,9 @@ def teacher_login(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
+                    messages.success(request, 'You have successfully logged in.', extra_tags='success')
                     return redirect('dashboard')
+            messages.error(request, 'Login failed. please try agin', extra_tags='warning')
             return render(request, 'core/t-log-in.html',
                           {'form': {'non_field_errors': "invalid credential"}})
     return render(request, 'core/t-log-in.html',)
