@@ -33,7 +33,6 @@ SECRET_KEY = '_20gcnya$25&-2)z$z8oba$d))0%kml%q%h+ir1))9tdqx&$**'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
 
@@ -143,7 +142,16 @@ CACHES = {
     }
 }
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+#Cookie name. this can be whatever you want
+SESSION_COOKIE_NAME='sessionid'  # use the sessionid in your views code
+#the module to store sessions data
+SESSION_ENGINE='django.contrib.sessions.backends.db'    
+#age of cookie in seconds (default: 2 weeks)
+SESSION_COOKIE_AGE= 24*60*60*7 # the number of seconds for only 7 for example
+#whether a user's session cookie expires when the web browser is closed
+SESSION_EXPIRE_AT_BROWSER_CLOSE=False
+#whether the session cookie should be secure (https:// only)
+SESSION_COOKIE_SECURE=False
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
