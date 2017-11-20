@@ -33,7 +33,6 @@ SECRET_KEY = '_20gcnya$25&-2)z$z8oba$d))0%kml%q%h+ir1))9tdqx&$**'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 
 ALLOWED_HOSTS = []
 

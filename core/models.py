@@ -53,7 +53,7 @@ class Person(AbstractBaseUser, PermissionsMixin):
     department = models.ForeignKey(
         Department, models.DO_NOTHING, default=None, blank=True, null=True)
     session = models.ForeignKey(
-        Session, models.DO_NOTHING, unique=True, blank=True, null=True)
+        Session, models.DO_NOTHING, blank=True, null=True)
     profile_image = TimestampImageField(
         upload_to='profiles/pic', blank=True, null=True)
     status = models.IntegerField(
@@ -91,7 +91,7 @@ class Assignment(models.Model):
     department = models.ForeignKey(
         Department, models.DO_NOTHING, default=None, blank=True, null=True, related_name="assignment_department")
     session = models.ForeignKey(
-        Session, models.DO_NOTHING, unique=True, blank=True, null=True, related_name="assignment_session")
+        Session, models.DO_NOTHING, blank=True, null=True, related_name="assignment_session")
     description = models.TextField(blank=True, null=True)
     slug = AutoSlugField(populate_from='name', always_update=True, unique=True)
     clone = models.ForeignKey('self', models.DO_NOTHING, blank=True, null=True)
