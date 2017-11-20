@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
 from .models import Person, Assignment, StudentAssignment
 
-from .forms import SignUpForm
+from .forms import SignUpForm, CreateAssignmentForm
 from .enums import PersonGroupType
 
 
@@ -88,7 +88,7 @@ def teacher_login(request):
                 if user.is_active:
                     login(request, user)
                     messages.success(request, 'You have successfully logged in.', extra_tags='success')
-                    return redirect('dashboard')
+                    return redirect('assignment')
             messages.error(request, 'Login failed. please try agin', extra_tags='warning')
             return render(request, 'core/t-log-in.html',
                           {'form': {'non_field_errors': "invalid credential"}})
@@ -150,42 +150,39 @@ def dashboard(request):
 
 
 @login_required
-def create_asignment(request):
-    #teacher_name=request.user.user_id
-   # user_name=request.user.user_id
-   
+def assignment(request):
+    if request.user.person_group is not PersonGroupType.TEACHER.value:
+        return redirect('/')
+    
+    if request.method == 'POST':
+        form = CreateAssignmentForm(request.POST)
+        if not form.is_valid():
+            return render(request, 'assignment.html',
+                          {'form': form})
 
-   return render(request, 'create-asignment.html')   
+        else:
+            teacher = request.user
+            name = form.cleaned_data.get('name')
+            department = form.cleaned_data.get('department')
+            session = form.cleaned_data.get('session', None)
+            description = form.cleaned_data.get('description', None)
+            assignment = Assignment.objects.create(
+                teacher=teacher, name=name, department=department,
+                session=session, description=description )
+            assignment.save()
+            messages.error(request, 'An assignment has been created successfully.', extra_tags='success')
+            return redirect('assignment')
+    
+    assignments = Assignment.objects.all().order_by('-created_at')
 
-
+    return render(request, 'assignment.html', {'form': CreateAssignmentForm(), 'assignments': assignments})   
 
 
 @login_required
 def review_assignemt(request):
     teacher_name=request.user.user_id
 
-    return render(request, 'review-assignemt.html')   
-
-
-@login_required
-def assignment(request):
-    user_name=request.user.user_id
-    print(user_name)
-    data = {}
-    if request.method == 'POST':	
-        data['name_as'] = request.POST.get('name_as')
-        data['description_as'] = request.POST.get('description_as')
-        names= Assignment.objects.update(name=data['name_as'] )
-        assignments=Assignment.objects.update(description=data['description_as'])
-        print(assignments)
-        
-        done="submit"
-        return render(request, 'create-asignment.html',{'done':done})  
-
-    else:
-
-        return render(request, 'create-asignment.html')
-    
+    return render(request, 'review-assignemt.html')    
 
 
 def assign_assignment(request):

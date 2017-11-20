@@ -1,5 +1,5 @@
 from django import forms
-from .models import Person
+from .models import Person, Assignment, Department
 from django.core.exceptions import ValidationError
 
 
@@ -98,3 +98,26 @@ class SignUpForm(forms.ModelForm):
             self._errors['password'] = self.error_class(
                 ['Passwords don\'t match'])
         return self.cleaned_data
+
+
+class CreateAssignmentForm(forms.ModelForm):
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=256,
+        required=True,
+    )
+    description = forms.CharField(
+        widget=forms.Textarea(attrs={'class': 'form-control'}),
+        required=False
+    )
+    department = forms.ModelChoiceField(
+        queryset = Department.objects.all(),
+        required=True
+    )
+
+    class Meta:
+        model = Assignment
+        fields = ['name', 'department', 'session', 'description',]
+    
+    def __init__(self, *args, **kwargs):
+        super(CreateAssignmentForm, self).__init__(*args, **kwargs)
