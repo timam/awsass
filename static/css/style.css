@@ -91,3 +91,9 @@
   font-weight: 300;
   color: #1a1a1a;
 }
+.intro-header {
+  color: #f8f8f8;
+  background-image:url(/static/img/pic-14.jpg);
+  background-size: cover;
+  padding:0px;
+}

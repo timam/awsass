@@ -1,20 +1,46 @@
-Assign Assignment =<select>
-  <option value="volvo">{{ assignment_name }}</option>
-  
-  
-</select><br><br><br>
+{% extends 'base.html' %}
 
-Student Name =<select>
-  <option value="volvo">{{ person_groups }}</option>
- 
-  
-</select><br><br><br>
+<!-- Header -->
 
-status=
-<select>
-  <option value="volvo">active</option>
-  <option value="saab">accptaed</option>
-  <option value="mercedes">denited</option>
+{% block content %}
+
+
+
+<header class="intro-header">
+  <div class="container">
+    <div class="intro-message" align="right">
+      <h2>Welcome Teacher</h2>
+     
+    </div>
+  </div>
+</header>
+
+<center>
+
+  <br><br><br>
+  Assign Assignment =<select>
+    <option value="volvo">{{ assignment_name }}</option>
+    
+    
+  </select><br><br>
   
-</select><br><br><br>
-<button type="button">Assign Now!!</button> 
+  Student Name =<select>
+    <option value="volvo">{{ person_groups }}</option>
+   
+    
+  </select><br><br>
+  
+  status=
+  <select>
+    <option value="volvo">active</option>
+    <option value="saab">accptaed</option>
+    <option value="mercedes">denited</option>
+    
+  </select><br><br>
+  <button type="button">Assign Now!!</button> 
+
+  <br><br><br>
+</center>
+
+
+{% endblock %}
