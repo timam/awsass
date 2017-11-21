@@ -1,11 +1,57 @@
-<form>
-    Container Name<br>
-    <input type="text" name="Container Name"><br>
-    Tag Name:<br>
-    <input type="text" name="Tag Name"><br>
-    Github URL:<br>
-    <input type="text" name="Github URL"> 
+{% extends 'base.html' %}
 
+<!-- Header -->
+{% block content %}
+
+<br>
+<br>
+<br>
+
+
+
+<form>
+
+    <div class="dropdown">
+        <button class="btn btn col-lg-6 dropdown-toggle" type="button" data-toggle="dropdown">Select An Assignment
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="#">HTML</a>
+            </li>
+        </ul>
+    </div>    <br>
+
+    <div class="form-horizontal">
+        <label class="control-label" for="ContainerName">Container Name</label>
+        <div class="col-sm-6">
+            <input type="" class="form-control" id="containerTag" placeholder="Please Enter your Container Tag">
+            <small id="containerHelp" class="form-text text-muted">Make sure you have uploaded container to Registry with exact tag</small>
+        </div><br>
+    </div>
+
+    <div class="form-horizontal">
+        <label for="control-label ">Container Tag</label>
+        <div class="col-sm-6">
+            <input type="" class="form-control" id="containerName" aria-describedby="containerHelp" placeholder="Please Enter your Container Name">
+            <small id="containerHelp" class="form-text text-muted">Make sure you have uploaded container to Registry</small>
+        </div><br>
+    </div>
+
+
+    <div class="form-horizontal">
+        <label for="control-label">Github URL</label>
+
+        <div>
+            <div class="col-sm-6">
+                <input type="" class="form-control" id="githubUrl" placeholder="Please Enter your Github URL">
+                <small id="containerHelp" class="form-text text-muted">Make sure you have uploaded Source Code to Your own Github Repository</small>
+            </div>
+        </div><br>
+    </div>
+    <button type="submit" class="btn col-lg-6">Submit Now</button>
 </form>
 
-<button type="button">Submit Now</button>
+<br>
+<br>
+<br> {% endblock %}
