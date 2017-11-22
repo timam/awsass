@@ -10,51 +10,67 @@
 </div>
 <br>
 
+<div class=" col-lg-12 row">
+    <div class=" col-lg-7 container">
+         <p class="lead" style="text-align:justify; padding:5%" > While submitting an assignment, Student must have to include Three things. 
+             Container Name, Container Tag & Github URL. Those three things will be used by Teacher to review the assignment.
+             <br><br>- Container Name is your Docker Image Name. <br>- Container Tag is your Docker Image Tag. <br>- Github URL is a URL what is 
+             being used to host your source code. <br><br>
+             Without this three things you will not be able to submit your Assignment.  
 
-
-<form>
-
-    <div class="dropdown">
-        <button class="btn btn col-lg-6 dropdown-toggle" type="button" data-toggle="dropdown">Select An Assignment
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li>
-                <a href="#">HTML</a>
-            </li>
-        </ul>
-    </div>    <br>
-
-
-    <div class="form-horizontal">
-            <label for="control-label ">Container Name</label>
-            <div class="col-sm-6">
-                <input type="" class="form-control" id="containerName" aria-describedby="containerHelp" placeholder="Please Enter your Container Name">
-                <small id="containerHelp" class="form-text text-muted">Make sure you have uploaded container to Registry</small>
-            </div><br>
-        </div>
-
-    <div class="form-horizontal">
-        <label class="control-label" for="ContainerTag">Container Tag</label>
-        <div class="col-sm-6">
-            <input type="" class="form-control" id="containerTag" placeholder="Please Enter your Container Tag">
-            <small id="containerHelp" class="form-text text-muted">Make sure you have uploaded container to Registry with exact tag</small>
-        </div><br>
+          </p>
     </div>
+        
+    <div class="col-lg-5">
 
-    <div class="form-horizontal">
-        <label for="control-label">Github URL</label>
 
-        <div>
-            <div class="col-sm-6">
-                <input type="" class="form-control" id="githubUrl" placeholder="Please Enter your Github URL">
-                <small id="containerHelp" class="form-text text-muted">Make sure you have uploaded Source Code to Your own Github Repository</small>
+
+        <form>
+
+            <div class="dropdown">
+                <button class="btn btn col-lg-12 dropdown-toggle" type="button" data-toggle="dropdown">Select An Assignment
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="#">HTML</a>
+                    </li>
+                </ul>
+            </div>    <br>
+
+
+            <div class="form-horizontal">
+                    <label for="control-label ">Container Name</label>
+                    <div class="col-sm-12">
+                        <input type="" class="form-control" id="containerName" aria-describedby="containerHelp" placeholder="Please Enter your Container Name">
+                        <small id="containerHelp" class="form-text text-muted">Make sure you have uploaded container to Registry</small>
+                    </div><br>
+                </div>
+
+            <div class="form-horizontal">
+                <label class="control-label" for="ContainerTag">Container Tag</label>
+                <div class="col-sm-12">
+                    <input type="" class="form-control" id="containerTag" placeholder="Please Enter your Container Tag">
+                    <small id="containerHelp" class="form-text text-muted">Make sure you have uploaded container to Registry with exact tag</small>
+                </div><br>
             </div>
-        </div><br>
-    </div>
-    <button type="submit" class="btn col-lg-6">Submit Now</button>
-</form>
 
-<br>
-<br>
-<br> {% endblock %}
+            <div class="form-horizontal">
+                <label for="control-label">Github URL</label>
+
+                <div>
+                    <div class="col-sm-12">
+                        <input type="" class="form-control" id="githubUrl" placeholder="Please Enter your Github URL">
+                        <small id="containerHelp" class="form-text text-muted">Make sure you have uploaded Source Code to Your own Github Repository</small>
+                    </div>
+                </div><br>
+            </div>
+            <button type="submit" class="btn col-lg-12">Submit Now</button>
+        </form>
+
+    <br>
+    <br>
+    <br> 
+    </div>
+</div>
+{% endblock %}
