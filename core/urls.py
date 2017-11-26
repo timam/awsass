@@ -9,8 +9,8 @@ urlpatterns = [
     url(r'^teacher_login/$', views.teacher_login, name='teacher_login'),
     url(r'^teacher_signup/$', views.teacher_signup, name='teacher_signup'),
     url(r'^assignment/$', views.assignment, name='assignment'),
-    url(r'^submit_addignment/$', views.submit_addignment, name='submit_addignment'),
-    url(r'^assign_assignment/$', views.assign_assignment, name='assign_assignment'),
+    url(r'^submit_assignment/$', views.submit_addignment, name='submit_assignment'),
+    url(r'^assign_assignment/$', views.assign_assignment, name='assign-assignment'),
     url(r'^review_assignemt/$', views.review_assignemt, name='review_assignemt'),
     url(r'^dashboard/$', views.dashboard, name='dashboard'),
 ]

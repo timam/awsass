@@ -5,60 +5,49 @@
 
 
 <section class="content-section-a">
-        
-          <div class="container">
-            <div class="row">
-              <div class="col-lg-12 ml-auto">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 ml-auto">
                 <div class="info">
                     <h1 align="center text-left">Your Assignment List</h1>
                 </div>
                 <table class="table table-hover">
-                  <thead>
-                    <tr>
-                      <th>SL</th>
-                      <th>Teacher Name</th>
-                      <th>Assignment Name</th>
-                      <th>Description</th>
-                      <th>Deadline</th>
-                      <th>Status</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for item in assignments %}
-                    <tr>
-                      <td>{{ forloop.counter }}</td>
-                      <td>{{ item.teacher }}</td>
-                      <!-- <td>{{ item.description}}</td>
-                      <td>{{ item.session }}</td>
-                      <td>{{ item.deadline }}</td> -->
-                    </tr>
-                    {% empty %}
-                    <tr>
-                      <td colspan="6" align="center">No assignment found</td>
-                    </tr>
-                    {% endfor %}
+                    <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th>Assignment</th>
+                            <th>Teacher</th>
+                            <th>Deadline</th>
+                            <th>remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in assignments %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ item.assignment }}</td>
+                            <td>{{ item.assigned_by }}</td>
+                            <td>{{ item.deadline}}</td>
+                            <td>{{ item.remarks }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" align="center">No assignment found for you</td>
+                        </tr>
+                        {% endfor %}
 
-                    
 
-                  </tbody>
+
+                    </tbody>
                 </table>
-              </div>
-              <button type="button" class="btn btn-outline-secondary"><a href="/submit_addignment" >Submit an Assignment Now</a></button>
-          </div>
-          <!-- /.container -->
-          <!-- Return to Top -->
-          <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
-
-<h1><Welcome "Student Name" /h1></Welcome> <br>
-<h2>Teacher Name={{ teacher_name }} Assigned you Assignment Name={{ assignment_name }} </h2><br>
- 
-<h2> {{ notice }}</h2>
- <br>
-
-
-
-<button type="button"></button>
-
-
-
+            </div>
+            <button type="button" class="btn btn-outline-secondary"><a href="/submit_addignment" >Submit an Assignment Now</a></button>
+        </div>
+        <!-- /.container -->
+        <!-- Return to Top -->
+        <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
+        <br>
+    </div>
+<section class="content-section-a">
 {% endblock %}
