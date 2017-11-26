@@ -116,8 +116,7 @@ class StudentAssignment(models.Model):
         Person, models.DO_NOTHING, blank=True, null=True, related_name='assignment_assigned_by')
     assignment = models.ForeignKey(
         Assignment, models.DO_NOTHING, blank=False, null=False, related_name="assignment_of_student")
-    creation_date = models.DateField()
-    deadline = models.DateField()
+    deadline = models.DateField(default=dat)
     alias = models.UUIDField(
         default=uuid.uuid4, editable=False, db_index=True, unique=True)
     clone = models.ForeignKey('self', models.DO_NOTHING, blank=True, null=True)

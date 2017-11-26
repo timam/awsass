@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
 from .models import Person, Assignment, StudentAssignment
 
-from .forms import SignUpForm, CreateAssignmentForm
+from .forms import SignUpForm, CreateAssignmentForm, AssignAssignmentForm
 from .enums import PersonGroupType
 
 
@@ -123,31 +123,14 @@ def teacher_signup(request):
 
 @login_required
 def dashboard(request):
-    user_name=request.user.user_id
-    person= Person.objects.get(user_id=user_name)
-    persons=person.person_group
-    print(persons)
-    if (persons==1):
+    if (request.user.person_group==PersonGroupType.TEACHER.value):
         person_groups= Person.objects.filter(person_group="1")
         return render(request, 'teacher-welcome.html',{'teacher_name':user_name })
 
-
-
-    elif(persons==2):
-        person_groups= Person.objects.filter(person_group="1")
-        assignment_name= Assignment.objects.all()
-        if not assignment_name:
-            notice="You Have No Assignment"
-            return render(request, 'student-welcome.html',{'teacher_name':person_groups,'assignment_name':assignment_name,'notice':notice })
-
-        return render(request, 'student-welcome.html',{'teacher_name':person_groups,'assignment_name':assignment_name})
-
-   # t = customer.objects.get(user=u)
-   # teacher= Assignment.objects.all()
-   # teacher_name=teacher[0]
-
+    elif(request.user.person_group==PersonGroupType.STUDENT.value):
+        student_assignment_list = StudentAssignment.objects.filter(student=request.user.pk)
+        return render(request, 'student-welcome.html',{ 'assignments':student_assignment_list})
     
-
 
 @login_required
 def assignment(request):
@@ -179,24 +162,38 @@ def assignment(request):
 
 
 @login_required
+def assign_assignment(request):
+    if request.user.person_group is not PersonGroupType.TEACHER.value:
+        return redirect('/')
+    
+    if request.method == 'POST':
+        form = AssignAssignmentForm(request.POST, request=request)
+        if not form.is_valid():
+            return render(request, 'assign-assignment.html',
+                          {'form': form})
+
+        else:
+            assigned_by = request.user
+            assignment = form.cleaned_data.get('assignment')
+            student = form.cleaned_data.get('student')
+            status = form.cleaned_data.get('status')
+            deadline = form.cleaned_data.get('deadline')
+            assign_assignment = StudentAssignment.objects.create(
+                assigned_by=assigned_by, assignment=assignment, student=student,
+                status=status, deadline=deadline)
+            assign_assignment.save()
+            messages.error(request, 'Assignment has been Assigned to a Student Successfully.', extra_tags='success')
+            return redirect('assign-assignment')
+    
+    assigned_assignments = StudentAssignment.objects.filter(assigned_by=request.user.pk).order_by('-created_at')
+    return render(request, 'assign-assignment.html', {'form': AssignAssignmentForm(request=request),
+                                                      'assigned_assignments': assigned_assignments})   
+
+
 def review_assignemt(request):
     teacher_name=request.user.user_id
 
     return render(request, 'review-assignemt.html')    
-
-
-def assign_assignment(request):
-    
-    assignment_name= Assignment.objects.all()
-    
-    person_groups= Person.objects.filter(person_group="2")
-    #o=person_groups[0].Person
-
-
-    print(assignment_name)
-    return render(request, 'assign-assignment.html',{'person_groups':person_groups,'assignment_name':assignment_name})
-
-
 
 
 @login_required

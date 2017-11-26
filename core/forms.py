@@ -1,6 +1,9 @@
 from django import forms
-from .models import Person, Assignment, Department
+from django.db.models import Q
 from django.core.exceptions import ValidationError
+
+from .enums import Status, PersonGroupType
+from .models import Person, Assignment, Department, StudentAssignment
 
 
 def ForbiddenUsernamesValidator(value):
@@ -112,6 +115,7 @@ class CreateAssignmentForm(forms.ModelForm):
     )
     department = forms.ModelChoiceField(
         queryset = Department.objects.all(),
+        label="Select a Department",
         required=True
     )
 
@@ -121,3 +125,50 @@ class CreateAssignmentForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super(CreateAssignmentForm, self).__init__(*args, **kwargs)
+
+
+class AssignAssignmentForm(forms.ModelForm):
+    assignment = forms.ModelChoiceField(
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        queryset = None,
+        required=True,
+        empty_label='Select An Assignment',
+        label="",
+    )
+
+    student = forms.ModelChoiceField(
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        queryset = Person.objects.filter(person_group=PersonGroupType.STUDENT.value),
+        required=True,
+        empty_label='Select A Student',
+        label="",
+    )
+
+    status = forms.ChoiceField(
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        choices = [(choice.value, choice.name.replace("_", " ").capitalize()) for choice in Status],
+        required=True,
+        initial=Status.ACTIVE.value,
+        label="",
+    )
+
+    deadline = forms.DateField(
+        widget=forms.DateInput(attrs={'class':'form-control', 'type': 'date'}),
+        required=True,
+        label="Set DeadLine",
+    )
+
+    remarks = forms.CharField(
+        widget=forms.Textarea(attrs={'class': 'form-control'}),
+        required=False
+    )
+
+
+    class Meta:
+        model = StudentAssignment
+        fields = ['assignment', 'student', 'status', 'deadline', 'remarks']
+    
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super(AssignAssignmentForm, self).__init__(*args, **kwargs)
+        self.fields['assignment'].queryset = Assignment.objects.filter(teacher=self.request.user)
