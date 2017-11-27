@@ -116,12 +116,13 @@ class StudentAssignment(models.Model):
         Person, models.DO_NOTHING, blank=True, null=True, related_name='assignment_assigned_by')
     assignment = models.ForeignKey(
         Assignment, models.DO_NOTHING, blank=False, null=False, related_name="assignment_of_student")
-    deadline = models.DateField(default=dat)
+    deadline = models.DateField()
     alias = models.UUIDField(
         default=uuid.uuid4, editable=False, db_index=True, unique=True)
     clone = models.ForeignKey('self', models.DO_NOTHING, blank=True, null=True)
-    container_name = models.CharField(max_length=24, unique=True, blank=True, null=True)
-    container_tag = models.CharField(max_length=24, unique=True, blank=True, null=True)
+    container_name = models.CharField(max_length=256, blank=True, null=True)
+    container_tag = models.CharField(max_length=128, blank=True, null=True)
+    github_url = models.CharField(max_length=1000, blank=True, null=True)
     status = models.IntegerField(
         choices=[(choice.value, choice.name.replace("_", " ")) for choice in Status], default=Status.PENDING.value)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -136,5 +137,5 @@ class StudentAssignment(models.Model):
         return self.get_name()
 
     def get_name(self):
-        name = u"{} / {} / {}".format(self.student, self.assigned_by, self.assignment)
+        name = u"{} / {} / {}".format(self.assignment, self.student, self.deadline)
         return name

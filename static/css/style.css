@@ -101,3 +101,11 @@
 .header-bg{
   background-color: #C5EFF7
 }
+
+.text-white {
+  color: #fff !important;
+}
+
+.m-r {
+  margin-right: 1rem !important;
+}

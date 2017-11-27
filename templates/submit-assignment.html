@@ -29,10 +29,28 @@
     </div>
         
     <div class="col-lg-5">
+        <form action="{% url 'submit_assignment' %}" method="post" role="form" class="login-form">
+            {% csrf_token %}
+            {% for field in form.visible_fields %}
+              <div class="form-group{% if field.errors %} has-error{% endif %}">
+                {% if field.label %}
+                <label for="{{ field.label }}">{{ field.label }}</label>
+                {% endif %}
+                {{ field }}
+                {% if field.help_text %}
+                  <span class="help-block">{{ field.help_text|safe }}</span>
+                {% endif %}
+                {% for error in field.errors %}
+                  <label class="control-label">{{ error }}</label>
+                {% endfor %}
+              </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-primary col-lg-12">Submit Now</button>
+          </form>
 
 
 
-        <form>
+        <!-- <form>
 
             <div class="dropdown">
                 <button class="btn btn col-lg-12 dropdown-toggle" type="button" data-toggle="dropdown">Select An Assignment
@@ -73,7 +91,7 @@
                 </div><br>
             </div>
             <button type="submit" class="btn col-lg-12">Submit Now</button>
-        </form>
+        </form> -->
 
     <br>
     <br>
