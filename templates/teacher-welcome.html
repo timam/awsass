@@ -1,11 +1,61 @@
-<h1>Welcome {{ teacher_name  }}</h1><br>
+{% extends 'base.html' %}
 
-<h3>You created "Number of Assignment"</h3><br>
-<button type="button" ><a href="/create_asignment"> Create A New Assignment</a></button><br><br>
+<!-- Header -->
+{% block content %}
+
+
+<section class="content-section-a">
+
+    <div class="container">
+        <div class="row">
+            <button type="button" class="btn btn-success m-r"><a class="text-white" href="{% url 'assignment' %}" >Create an Assignment</a></button>
+            <button type="button" class="btn btn-info m-r"><a class="text-white" href="{% url 'assign-assignment' %}" >Assign Assignment</a></button>
+            <button type="button" class="btn btn-primary"><a class="text-white" href="{% url 'review_assignemt' %}" >Review an Assignment</a></button>
+            <div class="col-lg-12 ml-auto">
+                <div class="info">
+                    <h1 align="center text-left">Assignment List Assigned by You</h1>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>SL</th>
+                            <th>Assignment</th>
+                            <th>student</th>
+                            <th>Deadline</th>
+                            <th>Container Name</th>
+                            <th>Container Tag</th>
+                            <th>Github Url</th>
+                            <th>remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in assignments %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ item.assignment }}</td>
+                            <td>{{ item.student }}</td>
+                            <td>{{ item.deadline}}</td>
+                            <td>{{ item.container_name}}</td>
+                            <td>{{ item.container_tag}}</td>
+                            <td><a href="{{item.github_url}}" target="_blank">{{item.github_url}}</a></td>
+                            <td>{{ item.remarks }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" align="center">You haven't assigned any Assignment yet</td>
+                        </tr>
+                        {% endfor %}
 
 
 
-Your "Number Of Student" has submitted Assignment"<br><br>
-<button type="button"><a href="/review_assignemt"> Review Now!!</a></button>
-<p><a href="/assign_assignment">Assign-Assignment</a></p>
-
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- /.container -->
+        <!-- Return to Top -->
+        <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
+        <br>
+    </div>
+<section class="content-section-a">
+{% endblock %}

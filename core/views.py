@@ -8,8 +8,8 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
 from .models import Person, Assignment, StudentAssignment
 
-from .forms import SignUpForm, CreateAssignmentForm, AssignAssignmentForm
-from .enums import PersonGroupType
+from .forms import SignUpForm, CreateAssignmentForm, AssignAssignmentForm, SubmitAssignmentForm
+from .enums import Status, PersonGroupType
 
 
 def index(request):
@@ -88,7 +88,7 @@ def teacher_login(request):
                 if user.is_active:
                     login(request, user)
                     messages.success(request, 'You have successfully logged in.', extra_tags='success')
-                    return redirect('assignment')
+                    return redirect('dashboard')
             messages.error(request, 'Login failed. please try agin', extra_tags='warning')
             return render(request, 'core/t-log-in.html',
                           {'form': {'non_field_errors': "invalid credential"}})
@@ -124,12 +124,12 @@ def teacher_signup(request):
 @login_required
 def dashboard(request):
     if (request.user.person_group==PersonGroupType.TEACHER.value):
-        person_groups= Person.objects.filter(person_group="1")
-        return render(request, 'teacher-welcome.html',{'teacher_name':user_name })
+        assigned_assignment_list = StudentAssignment.objects.filter(assigned_by=request.user.pk)
+        return render(request, 'teacher-welcome.html', { 'assignments':assigned_assignment_list})
 
     elif(request.user.person_group==PersonGroupType.STUDENT.value):
         student_assignment_list = StudentAssignment.objects.filter(student=request.user.pk)
-        return render(request, 'student-welcome.html',{ 'assignments':student_assignment_list})
+        return render(request, 'student-welcome.html', { 'assignments':student_assignment_list})
     
 
 @login_required
@@ -153,10 +153,10 @@ def assignment(request):
                 teacher=teacher, name=name, department=department,
                 session=session, description=description )
             assignment.save()
-            messages.error(request, 'An assignment has been created successfully.', extra_tags='success')
+            messages.success(request, 'An assignment has been created successfully.', extra_tags='success')
             return redirect('assignment')
     
-    assignments = Assignment.objects.all().order_by('-created_at')
+    assignments = Assignment.objects.filter(teacher=request.user.pk).order_by('-created_at')
 
     return render(request, 'assignment.html', {'form': CreateAssignmentForm(), 'assignments': assignments})   
 
@@ -178,11 +178,12 @@ def assign_assignment(request):
             student = form.cleaned_data.get('student')
             status = form.cleaned_data.get('status')
             deadline = form.cleaned_data.get('deadline')
+            remarks = form.cleaned_data.get('remarks', '')
             assign_assignment = StudentAssignment.objects.create(
                 assigned_by=assigned_by, assignment=assignment, student=student,
-                status=status, deadline=deadline)
+                status=status, deadline=deadline, remarks=remarks)
             assign_assignment.save()
-            messages.error(request, 'Assignment has been Assigned to a Student Successfully.', extra_tags='success')
+            messages.success(request, 'Assignment has been Assigned to a Student Successfully.', extra_tags='success')
             return redirect('assign-assignment')
     
     assigned_assignments = StudentAssignment.objects.filter(assigned_by=request.user.pk).order_by('-created_at')
@@ -198,6 +199,29 @@ def review_assignemt(request):
 
 @login_required
 def submit_addignment(request):
-    teacher_name=request.user.user_id
+    if request.user.person_group is not PersonGroupType.STUDENT.value:
+        return redirect('/')
+    
+    if request.method == 'POST':
+        form = SubmitAssignmentForm(request.POST, request=request)
+        if not form.is_valid():
+            return render(request, 'submit-assignment.html',
+                          {'form': form})
+        else:
+            assignment = form.cleaned_data.get('assignment')
+            container_name = form.cleaned_data.get('container_name')
+            container_tag = form.cleaned_data.get('container_tag', '')
+            github_url = form.cleaned_data.get('github_url', '')
+            print(assignment, container_name)
 
-    return render(request, 'submit-addignment.html')   
+            student_assignment = StudentAssignment.objects.get(pk=assignment.id)
+            student_assignment.container_name = container_name
+            student_assignment.container_tag = container_tag
+            student_assignment.github_url = github_url
+            student_assignment.status = Status.PENDING.value
+            student_assignment.save()
+
+            messages.success(request, 'Assignment has been Submitted successfully', extra_tags='success')
+            return redirect('dashboard')
+            
+    return render(request, 'submit-assignment.html', {'form': SubmitAssignmentForm(request=request)})   

@@ -1,5 +1,6 @@
 from django import forms
 from django.db.models import Q
+from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 
 from .enums import Status, PersonGroupType
@@ -44,6 +45,13 @@ def UniquePhoneValidator(value):
 def UniqueUsernameIgnoreCaseValidator(value):
     if Person.objects.filter(user_id__iexact=value).exists():
         raise ValidationError('User with this User_Id already exists.')
+
+def IsUrlValidator(value):
+    validate = URLValidator()
+    try:
+        validate(value)
+    except ValidationError:
+        raise ValidationError('Must be a url')
 
 
 class SignUpForm(forms.ModelForm):
@@ -172,3 +180,41 @@ class AssignAssignmentForm(forms.ModelForm):
         self.request = kwargs.pop('request')
         super(AssignAssignmentForm, self).__init__(*args, **kwargs)
         self.fields['assignment'].queryset = Assignment.objects.filter(teacher=self.request.user)
+
+
+class SubmitAssignmentForm(forms.ModelForm):
+    assignment = forms.ModelChoiceField(
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        queryset = None,
+        required=True,
+        empty_label='Select An Assignment',
+        label="Assignment",
+    )
+
+    container_name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=256,
+        required=True,
+    )
+
+    container_tag = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=128,
+        required=False,
+    )
+
+    github_url = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        max_length=2000,
+        required=False,
+    )
+
+    class Meta:
+        model = StudentAssignment
+        fields = ['container_name', 'container_tag', 'github_url']
+    
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super(SubmitAssignmentForm, self).__init__(*args, **kwargs)
+        self.fields['assignment'].queryset = StudentAssignment.objects.filter(student=self.request.user)
+        self.fields['github_url'].validators.append(IsUrlValidator)

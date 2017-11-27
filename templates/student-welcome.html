@@ -19,6 +19,9 @@
                             <th>Assignment</th>
                             <th>Teacher</th>
                             <th>Deadline</th>
+                            <th>Container Name</th>
+                            <th>Container Tag</th>
+                            <th>Github Url</th>
                             <th>remarks</th>
                         </tr>
                     </thead>
@@ -29,6 +32,9 @@
                             <td>{{ item.assignment }}</td>
                             <td>{{ item.assigned_by }}</td>
                             <td>{{ item.deadline}}</td>
+                            <td>{{ item.container_name}}</td>
+                            <td>{{ item.container_tag}}</td>
+                            <td><a href="{{item.github_url}}" target="_blank">{{item.github_url}}</a></td>
                             <td>{{ item.remarks }}</td>
                         </tr>
                         {% empty %}
@@ -42,7 +48,7 @@
                     </tbody>
                 </table>
             </div>
-            <button type="button" class="btn btn-outline-secondary"><a href="/submit_addignment" >Submit an Assignment Now</a></button>
+            <button type="button" class="btn btn-success m-r"><a class="text-white" href="{% url 'submit_assignment' %}" >Submit an Assignment Now</a></button>
         </div>
         <!-- /.container -->
         <!-- Return to Top -->
