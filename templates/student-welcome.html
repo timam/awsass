@@ -32,10 +32,26 @@
                             <td>{{ item.assignment }}</td>
                             <td>{{ item.assigned_by }}</td>
                             <td>{{ item.deadline}}</td>
+                            {% if item.container_name %}
                             <td>{{ item.container_name}}</td>
+                            {% else %}
+                            <td>-</td>
+                            {% endif %}
+                            {% if item.container_tag %}
                             <td>{{ item.container_tag}}</td>
+                            {% else %}
+                            <td>-</td>
+                            {% endif %}
+                            {% if item.github_url %}
                             <td><a href="{{item.github_url}}" target="_blank">{{item.github_url}}</a></td>
-                            <td>{{ item.remarks }}</td>
+                            {% else %}
+                            <td>-</td>
+                            {% endif %}
+                            {% if item.remarks %}
+                            <td>{{ item.remarks}}</td>
+                            {% else %}
+                            <td>-</td>
+                            {% endif %}
                         </tr>
                         {% empty %}
                         <tr>
