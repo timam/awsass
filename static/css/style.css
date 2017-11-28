@@ -104,6 +104,11 @@
 
 .text-white {
   color: #fff !important;
+  cursor: pointer;
+}
+
+.text-white:hover {
+  text-decoration: none;
 }
 
 .m-r {

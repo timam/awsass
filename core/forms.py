@@ -218,3 +218,26 @@ class SubmitAssignmentForm(forms.ModelForm):
         super(SubmitAssignmentForm, self).__init__(*args, **kwargs)
         self.fields['assignment'].queryset = StudentAssignment.objects.filter(student=self.request.user)
         self.fields['github_url'].validators.append(IsUrlValidator)
+
+
+class ChangeStatusForm(forms.ModelForm):
+    status = forms.ChoiceField(
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        choices = [(choice.value, choice.name.replace("_", " ").capitalize()) for choice in Status],
+        required=True,
+        label="",
+    )
+
+    remarks = forms.CharField(
+        widget=forms.Textarea(attrs={'class': 'form-control'}),
+        required=False
+    )
+
+    class Meta:
+        model = StudentAssignment
+        fields = ['status', 'remarks']
+    
+    def __init__(self, *args, **kwargs):
+        self.status = kwargs.pop('status')
+        super(ChangeStatusForm, self).__init__(*args, **kwargs)
+        self.fields['status'].initial = self.status

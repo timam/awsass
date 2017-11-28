@@ -8,7 +8,7 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
 from .models import Person, Assignment, StudentAssignment
 
-from .forms import SignUpForm, CreateAssignmentForm, AssignAssignmentForm, SubmitAssignmentForm
+from .forms import SignUpForm, CreateAssignmentForm, AssignAssignmentForm, SubmitAssignmentForm, ChangeStatusForm
 from .enums import Status, PersonGroupType
 
 
@@ -130,7 +130,7 @@ def dashboard(request):
     elif(request.user.person_group==PersonGroupType.STUDENT.value):
         student_assignment_list = StudentAssignment.objects.filter(student=request.user.pk)
         return render(request, 'student-welcome.html', { 'assignments':student_assignment_list})
-    
+
 
 @login_required
 def assignment(request):
@@ -191,10 +191,30 @@ def assign_assignment(request):
                                                       'assigned_assignments': assigned_assignments})   
 
 
-def review_assignemt(request):
-    teacher_name=request.user.user_id
+def review_assignemt(request, alias):
+    if request.user.person_group is not PersonGroupType.TEACHER.value:
+        messages.error(request, 'You are not authorized to access this page', extra_tags='warning')
+        return redirect('/')
+    assignment = StudentAssignment.objects.get(alias=alias)
+    if request.method == 'POST':
+        form = ChangeStatusForm(request.POST, status=assignment.status)
+        
+        if not form.is_valid():
+            messages.error(request, 'Somethings went wrong', extra_tags='warning')
+            return render(request, 'review-assignemt.html',
+                          {'form': form})
+        else:
+            status = form.cleaned_data.get('status')
+            remarks = form.cleaned_data.get('remarks', '')
 
-    return render(request, 'review-assignemt.html')    
+            assignment.status = status
+            assignment.remarks = remarks
+            assignment.save()
+            messages.success(request, 'Status has been changed Successfully', extra_tags='success')
+            return redirect('dashboard')
+
+    return render(request, 'review-assignemt.html',
+                  {'assignment': assignment, 'form': ChangeStatusForm(status=assignment.status)})    
 
 
 @login_required
@@ -212,13 +232,13 @@ def submit_addignment(request):
             container_name = form.cleaned_data.get('container_name')
             container_tag = form.cleaned_data.get('container_tag', '')
             github_url = form.cleaned_data.get('github_url', '')
-            print(assignment, container_name)
 
             student_assignment = StudentAssignment.objects.get(pk=assignment.id)
             student_assignment.container_name = container_name
             student_assignment.container_tag = container_tag
             student_assignment.github_url = github_url
-            student_assignment.status = Status.PENDING.value
+            if container_name or github_url:
+                student_assignment.status = Status.PENDING.value
             student_assignment.save()
 
             messages.success(request, 'Assignment has been Submitted successfully', extra_tags='success')
