@@ -29,7 +29,7 @@
     </div>
         
     <div class="col-lg-5">
-        <form action="{% url 'submit_assignment' %}" method="post" role="form" class="login-form">
+        <form action="{% url 'submit_assignment' None %}" method="post" role="form" class="login-form">
             {% csrf_token %}
             {% for field in form.visible_fields %}
               <div class="form-group{% if field.errors %} has-error{% endif %}">
@@ -41,7 +41,7 @@
                   <span class="help-block">{{ field.help_text|safe }}</span>
                 {% endif %}
                 {% for error in field.errors %}
-                  <label class="control-label">{{ error }}</label>
+                  <label class="control-label text-danger">{{ error }}</label>
                 {% endfor %}
               </div>
             {% endfor %}

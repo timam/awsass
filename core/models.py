@@ -133,6 +133,8 @@ class StudentAssignment(models.Model):
         verbose_name = _('student assignment')
         verbose_name_plural = _('student assignments')
 
+        unique_together = (('student', 'assignment'), )
+
     def __str__(self):
         return self.get_name()
 

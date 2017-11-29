@@ -136,12 +136,13 @@ def dashboard(request):
 def assignment(request):
     if request.user.person_group is not PersonGroupType.TEACHER.value:
         return redirect('/')
-    
+    assignments = Assignment.objects.filter(teacher=request.user.pk).order_by('-created_at')
     if request.method == 'POST':
         form = CreateAssignmentForm(request.POST)
         if not form.is_valid():
+            messages.error(request, 'Somethings went wrong', extra_tags='warning')
             return render(request, 'assignment.html',
-                          {'form': form})
+                          {'form': form, 'assignments': assignments})
 
         else:
             teacher = request.user
@@ -155,8 +156,6 @@ def assignment(request):
             assignment.save()
             messages.success(request, 'An assignment has been created successfully.', extra_tags='success')
             return redirect('assignment')
-    
-    assignments = Assignment.objects.filter(teacher=request.user.pk).order_by('-created_at')
 
     return render(request, 'assignment.html', {'form': CreateAssignmentForm(), 'assignments': assignments})   
 
@@ -165,12 +164,13 @@ def assignment(request):
 def assign_assignment(request):
     if request.user.person_group is not PersonGroupType.TEACHER.value:
         return redirect('/')
-    
+    assigned_assignments = StudentAssignment.objects.filter(assigned_by=request.user.pk).order_by('-created_at')
     if request.method == 'POST':
         form = AssignAssignmentForm(request.POST, request=request)
         if not form.is_valid():
+            messages.error(request, 'This assignment has already been assigned to this Student', extra_tags='warning')
             return render(request, 'assign-assignment.html',
-                          {'form': form})
+                          {'form': form, 'assigned_assignments': assigned_assignments})
 
         else:
             assigned_by = request.user
@@ -186,7 +186,6 @@ def assign_assignment(request):
             messages.success(request, 'Assignment has been Assigned to a Student Successfully.', extra_tags='success')
             return redirect('assign-assignment')
     
-    assigned_assignments = StudentAssignment.objects.filter(assigned_by=request.user.pk).order_by('-created_at')
     return render(request, 'assign-assignment.html', {'form': AssignAssignmentForm(request=request),
                                                       'assigned_assignments': assigned_assignments})   
 
@@ -218,7 +217,7 @@ def review_assignemt(request, alias):
 
 
 @login_required
-def submit_addignment(request):
+def submit_assignment(request, alias):
     if request.user.person_group is not PersonGroupType.STUDENT.value:
         return redirect('/')
     
@@ -244,4 +243,4 @@ def submit_addignment(request):
             messages.success(request, 'Assignment has been Submitted successfully', extra_tags='success')
             return redirect('dashboard')
             
-    return render(request, 'submit-assignment.html', {'form': SubmitAssignmentForm(request=request)})   
+    return render(request, 'submit-assignment.html', {'form': SubmitAssignmentForm(request=request, alias=alias)})   

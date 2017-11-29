@@ -23,6 +23,7 @@
                             <th>Container Tag</th>
                             <th>Github Url</th>
                             <th>remarks</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,6 +53,9 @@
                             {% else %}
                             <td>-</td>
                             {% endif %}
+                            <th>
+                                <button type="button" class="btn btn-info m-r"><a class="text-white" href="{% url 'submit_assignment' item.alias %}" >Submit</a></button>
+                            </th>
                         </tr>
                         {% empty %}
                         <tr>
@@ -64,7 +68,6 @@
                     </tbody>
                 </table>
             </div>
-            <button type="button" class="btn btn-success m-r"><a class="text-white" href="{% url 'submit_assignment' %}" >Submit an Assignment Now</a></button>
         </div>
         <!-- /.container -->
         <!-- Return to Top -->
