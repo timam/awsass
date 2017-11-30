@@ -69,8 +69,8 @@ class Person(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = _('persons')
 
     def __str__(self):
-        name = u"{} - {} {}".format(self.user_id, self.first_name,
-                                self.last_name,)
+        name = u"{} - {} {} / {} / {}".format(self.user_id, self.first_name,
+                                self.last_name, self.department, self.session)
         return name.strip()
 
     def get_full_name(self):
@@ -101,7 +101,7 @@ class Assignment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        name = u"{} / {}".format(self.name, self.teacher,)
+        name = u"{} / {} / {}".format(self.name, self.department, self.session)
         return name.strip()
 
     class Meta:

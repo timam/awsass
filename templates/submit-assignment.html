@@ -29,7 +29,36 @@
     </div>
         
     <div class="col-lg-5">
-        <form action="{% url 'submit_assignment' None %}" method="post" role="form" class="login-form">
+        <div class="login-form">
+            <div class="form-group">
+                <label><h4>Assignment</h4></label>
+                <div class="from-control text-gray">
+                    {{ assignment.assignment.name }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label><h4>Description</h4></label>
+                <div class="from-control text-gray">
+                    {{ assignment.assignment.description }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label><h4>Deadline</h4></label>
+                <div class="from-control text-gray">
+                    {{ assignment.deadline }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label><h4>Teacher</h4></label>
+                <div class="from-control text-gray">
+                    <span>{{ assignment.assigned_by.first_name}} {{assignment.assigned_by.last_name }}
+                    {% if assignment.assigned_by.department %}
+                        ({{assignment.assigned_by.department}})
+                    {% endif %}</span>
+                </div>
+            </div>
+        </div>
+        <form action="{% url 'submit_assignment' assignment.alias %}" method="post" role="form" class="login-form">
             {% csrf_token %}
             {% for field in form.visible_fields %}
               <div class="form-group{% if field.errors %} has-error{% endif %}">

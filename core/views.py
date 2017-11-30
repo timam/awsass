@@ -8,7 +8,9 @@ from django.views.decorators.csrf import csrf_protect, csrf_exempt
 
 from .models import Person, Assignment, StudentAssignment
 
-from .forms import SignUpForm, CreateAssignmentForm, AssignAssignmentForm, SubmitAssignmentForm, ChangeStatusForm
+from .forms import (StudentSignUpForm, TeacherSignUpForm,
+                    CreateAssignmentForm, AssignAssignmentForm,
+                    SubmitAssignmentForm, ChangeStatusForm)
 from .enums import Status, PersonGroupType
 
 
@@ -47,7 +49,7 @@ def student_login(request):
 @csrf_exempt
 def student_signup(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        form = StudentSignUpForm(request.POST)
         if not form.is_valid():
             return render(request, 'core/s-sign-up.html',
                           {'form': form})
@@ -70,7 +72,7 @@ def student_signup(request):
 
     else:
         return render(request, 'core/s-sign-up.html',
-                      {'form': SignUpForm()})
+                      {'form': StudentSignUpForm()})
 
 #Teacher Section
 @csrf_exempt
@@ -97,7 +99,7 @@ def teacher_login(request):
 @csrf_exempt
 def teacher_signup(request):
     if request.method == 'POST':
-        form = SignUpForm(request.POST)
+        form = TeacherSignUpForm(request.POST)
         if not form.is_valid():
             return render(request, 'core/t-sign-up.html',
                           {'form': form})
@@ -108,9 +110,10 @@ def teacher_signup(request):
             last_name = form.cleaned_data.get('last_name')
             email = form.cleaned_data.get('email')
             department = form.cleaned_data.get('department')
+            phone = form.cleaned_data.get('phone', None)
             password = form.cleaned_data.get('password')
             person = Person.objects.create_user(user_id=user_id, first_name=first_name, last_name=last_name,
-                                                password=password, email=email, department=department,)
+                                                password=password, email=email, phone=phone, department=department,)
             person.person_group = PersonGroupType.TEACHER.value
             person.save()
             user = authenticate(user_id=user_id, password=password)
@@ -119,7 +122,7 @@ def teacher_signup(request):
 
     else:
         return render(request, 'core/t-sign-up.html',
-                      {'form': SignUpForm()})
+                      {'form': TeacherSignUpForm()})
 
 @login_required
 def dashboard(request):
@@ -220,27 +223,26 @@ def review_assignemt(request, alias):
 def submit_assignment(request, alias):
     if request.user.person_group is not PersonGroupType.STUDENT.value:
         return redirect('/')
+    assignment = StudentAssignment.objects.get(alias=alias)
     
     if request.method == 'POST':
-        form = SubmitAssignmentForm(request.POST, request=request)
+        form = SubmitAssignmentForm(request.POST, request=request, alias=alias)
         if not form.is_valid():
             return render(request, 'submit-assignment.html',
                           {'form': form})
         else:
-            assignment = form.cleaned_data.get('assignment')
             container_name = form.cleaned_data.get('container_name')
             container_tag = form.cleaned_data.get('container_tag', '')
             github_url = form.cleaned_data.get('github_url', '')
-
-            student_assignment = StudentAssignment.objects.get(pk=assignment.id)
-            student_assignment.container_name = container_name
-            student_assignment.container_tag = container_tag
-            student_assignment.github_url = github_url
+            assignment.container_name = container_name
+            assignment.container_tag = container_tag
+            assignment.github_url = github_url
             if container_name or github_url:
-                student_assignment.status = Status.PENDING.value
-            student_assignment.save()
+                assignment.status = Status.PENDING.value
+            assignment.save()
 
             messages.success(request, 'Assignment has been Submitted successfully', extra_tags='success')
             return redirect('dashboard')
             
-    return render(request, 'submit-assignment.html', {'form': SubmitAssignmentForm(request=request, alias=alias)})   
+    return render(request, 'submit-assignment.html',
+                  {'form': SubmitAssignmentForm(request=request, alias=alias), 'assignment': assignment})   
