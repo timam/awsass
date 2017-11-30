@@ -42,7 +42,7 @@
                       <span class="help-block">{{ field.help_text|safe }}</span>
                     {% endif %}
                     {% for error in field.errors %}
-                      <label class="control-label">{{ error }}</label>
+                      <label class="control-label text-danger">{{ error }}</label>
                     {% endfor %}
                   </div>
                 {% endfor %}

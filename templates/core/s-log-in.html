@@ -42,11 +42,11 @@
             {% csrf_token %}
              <input type="text" id="user_id" name="user_id" placeholder="student-id">
                {% for error in form.user_id.errors %}
-                 <label class="control-label danger">{{ error }}</label>
+                 <label class="control-label text-danger">{{ error }}</label>
                {% endfor %}
              <input type="password" class="form-control" id="password" name="password" placeholder="password">
                {% for error in form.password.errors %}
-                 <label class="control-label danger">{{ error }}</label>
+                 <label class="control-label text-danger">{{ error }}</label>
                {% endfor %}
              <button type="submit" style="color:rgb(255, 245, 220);">Log in</button>
              <p class="message">Haven't any account?<a href="{% url 'student_signup' %}">Sign up</a></p>

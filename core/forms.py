@@ -53,6 +53,10 @@ def IsUrlValidator(value):
     except ValidationError:
         raise ValidationError('Must be a url')
 
+def UniqueAssignmentForPersonValidator(value):
+    if Assignment.objects.filter(name__iexact=value).exists():
+        raise ValidationError('Assignment with this name already exists.')
+
 
 class SignUpForm(forms.ModelForm):
     user_id = forms.CharField(
@@ -133,6 +137,7 @@ class CreateAssignmentForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         super(CreateAssignmentForm, self).__init__(*args, **kwargs)
+        self.fields['name'].validators.append(UniqueAssignmentForPersonValidator)
 
 
 class AssignAssignmentForm(forms.ModelForm):
@@ -215,8 +220,11 @@ class SubmitAssignmentForm(forms.ModelForm):
     
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
+        self.alias = kwargs.pop('alias', None)
         super(SubmitAssignmentForm, self).__init__(*args, **kwargs)
         self.fields['assignment'].queryset = StudentAssignment.objects.filter(student=self.request.user)
+        if self.alias:
+            self.fields['assignment'].initial = StudentAssignment.objects.get(alias=self.alias)
         self.fields['github_url'].validators.append(IsUrlValidator)
 
 

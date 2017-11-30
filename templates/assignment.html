@@ -49,7 +49,7 @@
       <div class="col-lg-4 mr-left">
         <div class="container-form">
           <div class="info">
-              <button class="btn col-lg-12"><a href="/review_assignemt"> Review Subbmited Assignemtns</a></button> <br><br>
+              <button class="btn col-lg-12"><a href="/dashboard"> Review Subbmited Assignemtns</a></button> <br><br>
               <button class="btn col-lg-12"><a href="/assign_assignment">Assign Assignment</a></button>
               <br><br>
             <h1 align="center"><u>Create Assignment</u></h1>
@@ -74,7 +74,7 @@
                   <span class="help-block">{{ field.help_text|safe }}</span>
                 {% endif %}
                 {% for error in field.errors %}
-                  <label class="control-label">{{ error }}</label>
+                  <label class="control-label text-danger">{{ error }}</label>
                 {% endfor %}
               </div>
             {% endfor %}
