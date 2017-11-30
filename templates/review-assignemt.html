@@ -16,12 +16,54 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-12 ml-auto">
-        name: {{assignment.assignment}}<br>
-        student: {{assignment.student}}<br>
-        deadline: {{assignment.deadline}}<br>
-        container_name: {{assignment.container_name}}<br>
-        container_tag: {{assignment.container_tag}}<br>
-        github_url: {{assignment.github_url}}<br>
+        <div class="login-form">
+            <div class="form-group">
+                <label>Assignment</label>
+                <div class="from-control text-gray">
+                    {{ assignment.assignment.name }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <div class="from-control text-gray">
+                    {{ assignment.assignment.description }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Student</label>
+                <div class="from-control text-gray">
+                    {{ assignment.student }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Deadline</label>
+                <div class="from-control text-gray">
+                    {{ assignment.deadline }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Container Name</label>
+                <div class="from-control text-gray">
+                    {{ assignment.container_name }}
+                </div>
+            </div>
+             <div class="form-group">
+                <label>Container Tag</label>
+                <div class="from-control text-gray">
+                    {{ assignment.container_tag }}
+                </div>
+            </div>
+             <div class="form-group">
+                <label>Github Url</label>
+                <div class="from-control text-gray">
+                  {% if assignment.github_url %}
+                      <a href="{{ assignment.github_url }}" target="_blank">{{ assignment.github_url }}</a></td>
+                  {% else %}
+                    -
+                  {% endif %}
+                </div>
+            </div>
+        </div>
         <form action="{% url 'review_assignemt' assignment.alias %}" method="post" role="form" class="login-form">
             {% csrf_token %}
             {% for field in form.visible_fields %}
@@ -44,6 +86,7 @@
       </div>
       
   </div>
+  <br>
   <!-- /.container -->
   <!-- Return to Top -->
   <a href="javascript:" id="return-to-top"><i class="fa fa-chevron-up"></i></a>
